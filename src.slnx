@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="noon.API/noon.API.csproj" />
+  <Project Path="noon.Application/noon.Application.csproj" />
+  <Project Path="noon.Domain/noon.Domain.csproj" />
+  <Project Path="noon.Infrastructure/noon.Infrastructure.csproj" Id="b002431f-dec9-4460-bfaf-a94022027535" />
+</Solution>

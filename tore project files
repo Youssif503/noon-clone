@@ -1,0 +1,26 @@
+ noon.API/Controllers/WeatherForecastController.cs  | 26 [31m----------------------[m
+ noon.API/Program.cs                                | 23 [31m-------------------[m
+ noon.API/Properties/launchSettings.json            | 23 [31m-------------------[m
+ noon.API/WeatherForecast.cs                        | 13 [31m-----------[m
+ noon.API/appsettings.Development.json              |  8 [31m-------[m
+ noon.API/appsettings.json                          |  9 [31m--------[m
+ noon.API/noon.API.csproj                           | 13 [31m-----------[m
+ noon.API/noon.API.http                             |  6 [31m-----[m
+ noon.Application/noon.Application.csproj           |  9 [31m--------[m
+ noon.Domain/Helpers/OrderStatus.cs                 | 10 [31m---------[m
+ noon.Domain/Helpers/PaymentMethod.cs               | 10 [31m---------[m
+ noon.Domain/Models/Address.cs                      | 21 [31m-----------------[m
+ noon.Domain/Models/Cart.cs                         | 10 [31m---------[m
+ noon.Domain/Models/CartItem.cs                     | 10 [31m---------[m
+ noon.Domain/Models/Category.cs                     |  6 [31m-----[m
+ noon.Domain/Models/Identity/User.cs                | 11 [31m---------[m
+ noon.Domain/Models/Order.cs                        | 10 [31m---------[m
+ noon.Domain/Models/OrderItem.cs                    | 10 [31m---------[m
+ noon.Domain/Models/Product.cs                      | 10 [31m---------[m
+ noon.Domain/Models/ProductImages.cs                | 10 [31m---------[m
+ noon.Domain/Models/ReView.cs                       | 10 [31m---------[m
+ noon.Domain/noon.Domain.csproj                     |  9 [31m--------[m
+ noon.Infrastructure/Data/ApplicationDbContext.cs   | 17 [31m--------------[m
+ .../Data/Conffiguration/UserConfiguration.cs       | 10 [31m---------[m
+ noon.Infrastructure/noon.Infrastructure.csproj     |  9 [31m--------[m
+ 25 files changed, 303 deletions(-)
