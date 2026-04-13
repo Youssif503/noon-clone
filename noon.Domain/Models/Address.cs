@@ -16,6 +16,5 @@ namespace noon.Domain.Models
         public string Floor { get; set; }   
         public string Apartment { get; set; }   
         public bool? isMain { get; set; }
-        //test
     }
 }
