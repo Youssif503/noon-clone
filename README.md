@@ -13,6 +13,6 @@ src/
 
 
 Db Design :
-![Preview](./noon.API\wwwroot\Images\erd.png)
+![Preview](./noon.API/wwwroot/Images/erd.png)
 
 
