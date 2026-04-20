@@ -6,6 +6,7 @@ Architecture
 
 The project is structured into the following layers:
 src/
+
 ├── noon.APIs/       
 ├── noon.Core/         
 ├── noon.Infrastrucure/     
