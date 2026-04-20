@@ -9,11 +9,13 @@ namespace noon.Domain.Models
     public class Order
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public User User { get; set; }
+        public required string UserId { get; set; } 
+        public User? User { get; set; }
         public double TotalPrice { get; set; }
         public OrderStatus Status { get; set; }
+        public string? TransactionId { get; set; }
+        public DateTime? PayedAt {  get; set; }
         public PaymentMethod PaymentMethod { get; set; }
-        public List<OrderItem> Items { get; set; }
+        public List<OrderItem> Items { get; set; } = new();
     }
 }

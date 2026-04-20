@@ -13,4 +13,8 @@
     <Folder Include="Service.Contract\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\noon.Domain\noon.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
