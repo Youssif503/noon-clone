@@ -14,8 +14,7 @@ namespace noon.Infrastructure.Data.Configuration
 
             builder.HasIndex(c=>c.UserId)
                    .IsUnique();
-
-
+            
         }
     }
 }

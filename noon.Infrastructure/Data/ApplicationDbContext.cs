@@ -2,11 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using noon.Domain.Models;
 using noon.Domain.Models.Identity;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Text;
-
 namespace noon.Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User>
@@ -28,6 +23,7 @@ namespace noon.Infrastructure.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
+        // Test
 
     }
 }
