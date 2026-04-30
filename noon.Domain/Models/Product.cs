@@ -10,7 +10,7 @@
         public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public string? Brand { get; set; }
         public bool? IsDeleted { get; set; } = false;
-        public List<ProductImages>? ProductImages { get; set; } = new();
+        public List<ProductImage>? ProductImages { get; set; } = new();
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
         public List<ReView>? ReViews { get; set; } = new();

@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Services.Concrete\" />
-    <Folder Include="Repository.Contract\" />
-    <Folder Include="Service.Contract\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\noon.Domain\noon.Domain.csproj" />
   </ItemGroup>
 

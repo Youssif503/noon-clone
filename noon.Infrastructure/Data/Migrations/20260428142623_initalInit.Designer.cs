@@ -12,8 +12,8 @@ using noon.Infrastructure.Data;
 namespace noon.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260420072803_Init_Create")]
-    partial class Init_Create
+    [Migration("20260428142623_initalInit")]
+    partial class initalInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

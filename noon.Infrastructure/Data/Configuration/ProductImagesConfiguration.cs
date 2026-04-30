@@ -7,9 +7,9 @@ using System.Text;
 
 namespace noon.Infrastructure.Data.Configuration
 {
-    public class ProductImagesConfiguration : IEntityTypeConfiguration<ProductImages>
+    public class ProductImagesConfiguration : IEntityTypeConfiguration<ProductImage>
     {
-        public void Configure(EntityTypeBuilder<ProductImages> builder)
+        public void Configure(EntityTypeBuilder<ProductImage> builder)
         {
             builder.Property(p => p.ImageUrl)
                 .IsRequired()
