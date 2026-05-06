@@ -24,12 +24,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         return await _context.Set<T>().ToListAsync();
     }
 
-    public void updateAsync(T entity)
+    public void update(T entity)
     {
          _context.Set<T>().Update(entity);
     }
 
-    public void deleteAsync(T entity)
+    public void delete(T entity)
     {
         _context.Set<T>().Remove(entity);
     }

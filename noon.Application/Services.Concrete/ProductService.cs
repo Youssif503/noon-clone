@@ -1,4 +1,5 @@
 using noon.Application.DTOs;
+using noon.Application.DTOs.Product;
 using noon.Application.Helpers;
 using noon.Application.Repository.Contract;
 using noon.Application.Service.Contract;
@@ -48,14 +49,10 @@ public class ProductService:IProductService
         return responseProduct;
     }
 
-    public async Task<Response> addProductAsync(createProductDto createProductDto)
+    public async Task<ResponseProductDto> addProductAsync(createProductDto createProductDto)
     {
-        if (createProductDto.StockCount < 0)
-            return new Response
-            {
-                IsSuccess =  false,
-                Message = "Stock count must be greater than or equal to zero"
-            };
+        if (createProductDto.StockCount <= 0)
+            return null;
         
         Product newProduct = new Product
         {
@@ -63,15 +60,20 @@ public class ProductService:IProductService
             Description = createProductDto.Description,
             StockCount = createProductDto.StockCount,
             BasePrice = createProductDto.Price,
+            CategoryId = createProductDto.CategoryId,
             ProductImages = createProductDto.ProductImages
         };
         
         await _unitOfWork.Products.addAsync(newProduct);
         await _unitOfWork.SaveChangesAsync();
-        return new Response
+        
+        return new ResponseProductDto
         {
-            IsSuccess = true,
-            Message = "Product added successfully"
+            Name =  newProduct.Name,
+            Id =  newProduct.Id,
+            Description =  newProduct.Description,
+            StockCount =   newProduct.StockCount,
+            BasePrice =  newProduct.BasePrice,
         };
 
     }
@@ -86,7 +88,7 @@ public class ProductService:IProductService
                 Message =  "Product not found"
             };
         
-        _unitOfWork.Products.deleteAsync(product);
+        _unitOfWork.Products.delete(product);
         await _unitOfWork.SaveChangesAsync();
         return new Response
         {
@@ -108,7 +110,7 @@ public class ProductService:IProductService
         Product.BasePrice = productDto.Price;
         Product.Name = productDto.Name;
         Product.Description = productDto.Description;
-        _unitOfWork.Products.updateAsync(Product);
+        _unitOfWork.Products.update(Product);
 
         await _unitOfWork.SaveChangesAsync();
 

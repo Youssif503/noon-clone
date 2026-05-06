@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServe
     builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped(typeof(IUnitOfWork),typeof(UnitOfWork));
 builder.Services.AddScoped(typeof(IProductService), typeof(ProductService));
+builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
 
 var app = builder.Build();
 

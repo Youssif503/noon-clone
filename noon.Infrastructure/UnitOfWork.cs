@@ -1,5 +1,6 @@
 using noon.Application;
 using noon.Application.Repository.Contract;
+using noon.Domain.Models;
 using noon.Infrastructure.Data;
 using noon.Infrastructure.Repositories;
 
@@ -13,8 +14,10 @@ public class UnitOfWork : IUnitOfWork ,IDisposable
     {
         _dbContext = dbContext;
         Products = new ProductRepository(dbContext);
+        Categories = new GenericRepository<Category>(dbContext);
     }
     public IProductRepository Products { get; private set; }
+    public IGenericRepository<Category> Categories { get;private set; }
     
     public async Task<int> SaveChangesAsync()
     {

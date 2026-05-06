@@ -8,5 +8,6 @@ public class createProductDto
     public string Description { get; set; }
     public double Price { get; set; }
     public int StockCount { get; set; } 
-    public List<ProductImage?> ProductImages { get; set; }
+    public int CategoryId { get; set; }
+    public List<ProductImage>? ProductImages { get; set; }
 }
