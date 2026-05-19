@@ -14,7 +14,7 @@ namespace noon.API.Controllers
             _reviewService = reviewService;
         }
 
-        [HttpGet("product/{productId:int}")]
+        [HttpGet("products/{productId:int}")]
         public async Task<IActionResult> GetAll(int productId)
         {
             var result = await _reviewService.getAllReviewsAsync(productId);
