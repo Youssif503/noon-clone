@@ -6,6 +6,7 @@ public interface IUnitOfWork
 {
     IProductRepository Products { get; }
     IGenericRepository<Category>  Categories { get; }
+    IReviewRepository Reviews { get; }
     Task<int> SaveChangesAsync();
 
 }

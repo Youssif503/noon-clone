@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using noon.Application;
 using noon.Application.DTOs;
@@ -21,9 +22,12 @@ namespace noon.API.Controllers
         [HttpPost]
         public async Task<IActionResult> addProduct(createProductDto createProductDto)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
             var result = await _productService.addProductAsync(createProductDto);
             if(result == null)
-                return new BadRequestObjectResult("Add Product Failed");
+                return BadRequest("Add Product Failed");
             
             return CreatedAtAction(nameof(getById), new { id = result.Id }, result);
         }
@@ -35,7 +39,7 @@ namespace noon.API.Controllers
             return Ok(products);
         }
 
-        [HttpGet("/getById/{id:int}")]
+        [HttpGet("getById/{id:int}")]
         public async Task<IActionResult> getById(int id)
         {
             var categories = await _productService.getProductByIdAsync(id);

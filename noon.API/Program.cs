@@ -1,3 +1,6 @@
+using System.Net.Mime;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using noon.Application;
 using noon.Application.Repository.Contract;
@@ -15,17 +18,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServe
 builder.Services.AddScoped(typeof(IUnitOfWork),typeof(UnitOfWork));
 builder.Services.AddScoped(typeof(IProductService), typeof(ProductService));
 builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
+builder.Services.AddScoped(typeof(IReviewService), typeof(ReviewService));
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

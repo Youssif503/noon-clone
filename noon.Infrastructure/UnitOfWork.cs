@@ -15,9 +15,11 @@ public class UnitOfWork : IUnitOfWork ,IDisposable
         _dbContext = dbContext;
         Products = new ProductRepository(dbContext);
         Categories = new GenericRepository<Category>(dbContext);
+        Reviews = new ReviewRepository(dbContext);
     }
     public IProductRepository Products { get; private set; }
     public IGenericRepository<Category> Categories { get;private set; }
+    public IReviewRepository Reviews { get;}
     
     public async Task<int> SaveChangesAsync()
     {
