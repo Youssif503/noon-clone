@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using noon.Application.DTOs;
 using noon.Application.DTOs.Product;
 using noon.Application.Helpers;
@@ -10,9 +11,11 @@ namespace noon.Application.Services.Concrete;
 public class ProductService:IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
-    public ProductService(IUnitOfWork unitOfWork)
+    private readonly IImageService _imageService;
+    public ProductService(IUnitOfWork unitOfWork , IImageService imageService)
     {
         _unitOfWork = unitOfWork;
+        _imageService = imageService;
     }
     public async Task<List<ProductDto>> getAllProductsAsync()
     {
@@ -49,33 +52,69 @@ public class ProductService:IProductService
         return responseProduct;
     }
 
-    public async Task<ResponseProductDto> addProductAsync(createProductDto createProductDto)
+    public async Task<ResponseProductDto> addProductAsync(createProductDto createProductDto,List<IFormFile> images)
     {
         if (createProductDto.StockCount <= 0)
             return null;
         
-        Product newProduct = new Product
-        {
-            Name = createProductDto.Name,
-            Description = createProductDto.Description,
-            StockCount = createProductDto.StockCount,
-            BasePrice = createProductDto.Price,
-            CategoryId = createProductDto.CategoryId,
-            ProductImages = createProductDto.ProductImages
-        };
+        if (images == null || images.Count == 0)
+            throw new ArgumentException("Images are required");
         
-        await _unitOfWork.Products.addAsync(newProduct);
-        await _unitOfWork.SaveChangesAsync();
-        
-        return new ResponseProductDto
+        var uploadedFiles = new List<string>();
+        await _unitOfWork.BeginTransactionAsync();
+        try
         {
-            Name =  newProduct.Name,
-            Id =  newProduct.Id,
-            Description =  newProduct.Description,
-            StockCount =   newProduct.StockCount,
-            BasePrice =  newProduct.BasePrice,
-        };
+            Product newProduct = new Product
+            {
+                Name = createProductDto.Name,
+                Description = createProductDto.Description,
+                StockCount = createProductDto.StockCount,
+                BasePrice = createProductDto.Price,
+                CategoryId = createProductDto.CategoryId,
+            };
 
+            await _unitOfWork.Products.addAsync(newProduct);
+            await _unitOfWork.SaveChangesAsync();
+            
+            List<ProductImage> productimages = new List<ProductImage>();
+
+            foreach (var image in images)
+            {
+                var imageUrl = await _imageService.SaveFileAsync(image);
+                uploadedFiles.Add(imageUrl);
+                ProductImage newImage = new ProductImage()
+                {
+                    ImageUrl = imageUrl,
+                    ProductId = newProduct.Id,
+                };
+                productimages.Add(newImage);
+            }
+            await _unitOfWork.Images.AddBulkAsync(productimages);
+            
+            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.CommitTransactionAsync();
+            
+            return new ResponseProductDto
+            {
+                Name =  newProduct.Name,
+                Id =  newProduct.Id,
+                Description =  newProduct.Description,
+                StockCount =   newProduct.StockCount,
+                BasePrice =  newProduct.BasePrice,
+            };
+
+        }
+        catch (Exception e)
+        {
+            await _unitOfWork.RollbackTransactionAsync();
+            
+            foreach (var file in uploadedFiles)
+            {
+                _imageService.DeleteFile(file);
+            }
+            
+            throw;
+        }
     }
 
     public async Task<Response> deleteProduct(int productId)

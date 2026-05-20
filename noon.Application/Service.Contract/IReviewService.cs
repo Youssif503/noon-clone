@@ -1,5 +1,3 @@
-using noon.Application.DTOs;
-using noon.Application.DTOs.Product;
 using noon.Application.DTOs.Review;
 using noon.Application.Helpers;
 namespace noon.Application.Service.Contract;

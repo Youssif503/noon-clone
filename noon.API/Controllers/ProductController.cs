@@ -20,12 +20,13 @@ namespace noon.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> addProduct(createProductDto createProductDto)
+        public async Task<IActionResult> addProduct([FromForm]createProductDto createProductDto
+            ,[FromForm]List<IFormFile> images)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
             
-            var result = await _productService.addProductAsync(createProductDto);
+            var result = await _productService.addProductAsync(createProductDto,images);
             if(result == null)
                 return BadRequest("Add Product Failed");
             
@@ -52,10 +53,10 @@ namespace noon.API.Controllers
             var result =  await _productService.deleteProduct(id);
             if (!result.IsSuccess)
             {
-                return BadRequest(result.Message);
+                return NotFound(result.Message);
             }
             
-            return Ok(result.Message);
+            return NoContent();
         }
 
         [HttpPut("{id:int}")]
@@ -67,7 +68,7 @@ namespace noon.API.Controllers
                 return BadRequest(result.Message);
             }
             
-            return Ok(result.Message);
+            return NoContent();
         }
         
         

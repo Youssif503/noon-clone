@@ -19,7 +19,7 @@ builder.Services.AddScoped(typeof(IUnitOfWork),typeof(UnitOfWork));
 builder.Services.AddScoped(typeof(IProductService), typeof(ProductService));
 builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
 builder.Services.AddScoped(typeof(IReviewService), typeof(ReviewService));
-
+builder.Services.AddScoped(typeof(IImageService), typeof(ImageService));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
