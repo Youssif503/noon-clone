@@ -7,5 +7,6 @@ public class ResponseProductDto
     public int Id { get; set; }
     public double BasePrice { get; set; }
     public int StockCount { get; set; }
+    public List<string> Images { get; set; }
     
 }

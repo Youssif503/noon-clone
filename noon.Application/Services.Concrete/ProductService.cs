@@ -55,7 +55,7 @@ public class ProductService:IProductService
     public async Task<ResponseProductDto> addProductAsync(createProductDto createProductDto,List<IFormFile> images)
     {
         if (createProductDto.StockCount <= 0)
-            return null;
+            throw new ArgumentException(nameof(createProductDto.StockCount));
         
         if (images == null || images.Count == 0)
             throw new ArgumentException("Images are required");
@@ -93,6 +93,11 @@ public class ProductService:IProductService
             
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitTransactionAsync();
+            List<string> response = new();
+            foreach (var image in uploadedFiles)
+            {
+                response.Add($"http://localhost:5250/images/{image}");
+            }
             
             return new ResponseProductDto
             {
@@ -101,6 +106,7 @@ public class ProductService:IProductService
                 Description =  newProduct.Description,
                 StockCount =   newProduct.StockCount,
                 BasePrice =  newProduct.BasePrice,
+                Images = response
             };
 
         }

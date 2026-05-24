@@ -2,6 +2,7 @@ using System.Net.Mime;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using noon.Application;
 using noon.Application.Repository.Contract;
 using noon.Application.Service.Contract;
@@ -35,8 +36,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "images")),
+    RequestPath = "/images"
+});
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
