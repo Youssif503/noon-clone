@@ -6,4 +6,5 @@
   <Project Path="noon.Application/noon.Application.csproj" />
   <Project Path="noon.Domain/noon.Domain.csproj" />
   <Project Path="noon.Infrastructure/noon.Infrastructure.csproj" Id="b002431f-dec9-4460-bfaf-a94022027535" />
+  <Project Path="noon.Tests/noon.Tests.csproj" />
 </Solution>

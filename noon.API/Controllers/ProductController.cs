@@ -36,14 +36,14 @@ namespace noon.API.Controllers
         [HttpGet]
         public async Task<IActionResult> getAll()
         {
-            var products = await _productService.getAllProductsAsync();
+            var products = await _productService.getAllProductsWithImagesAsync();
             return Ok(products);
         }
 
         [HttpGet("getById/{id:int}")]
         public async Task<IActionResult> getById(int id)
         {
-            var categories = await _productService.getProductByIdAsync(id);
+            var categories = await _productService.getProductWithImagesByIdAsync(id);
             return Ok(categories);
         }
 

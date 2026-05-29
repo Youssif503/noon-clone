@@ -4,6 +4,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using noon.Application;
+using noon.Application.Helpers;
 using noon.Application.Repository.Contract;
 using noon.Application.Service.Contract;
 using noon.Application.Services.Concrete;
@@ -21,6 +22,7 @@ builder.Services.AddScoped(typeof(IProductService), typeof(ProductService));
 builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
 builder.Services.AddScoped(typeof(IReviewService), typeof(ReviewService));
 builder.Services.AddScoped(typeof(IImageService), typeof(ImageService));
+builder.Services.AddSingleton<ImageResolver>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -45,7 +47,6 @@ app.UseStaticFiles(new StaticFileOptions
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

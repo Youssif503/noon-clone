@@ -24,15 +24,18 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         Reviews = new ReviewRepository(dbContext);
 
         Images = new ImageRepository(dbContext);
+        
+        Carts = new CartRepository(dbContext);
     }
 
-    public IProductRepository Products { get; }
+    public IProductRepository Products { get; private set; }
+    public ICartRepository Carts { get; private set; }
 
-    public IGenericRepository<Category> Categories { get; }
+    public IGenericRepository<Category> Categories { get; private set; }
 
-    public IReviewRepository Reviews { get; }
+    public IReviewRepository Reviews { get; private set; }
 
-    public IImagesRepository Images { get; }
+    public IImagesRepository Images { get; private set; }
 
     public async Task<int> SaveChangesAsync()
     {

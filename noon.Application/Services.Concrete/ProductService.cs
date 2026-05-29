@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using noon.Application.DTOs;
 using noon.Application.DTOs.Product;
 using noon.Application.Helpers;
@@ -12,44 +13,47 @@ public class ProductService:IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IImageService _imageService;
-    public ProductService(IUnitOfWork unitOfWork , IImageService imageService)
+    private readonly ImageResolver _imageResolver;
+    public ProductService(IUnitOfWork unitOfWork , 
+        IImageService imageService,
+        ImageResolver imageResolver)
     {
         _unitOfWork = unitOfWork;
         _imageService = imageService;
+        _imageResolver = imageResolver;
     }
-    public async Task<List<ProductDto>> getAllProductsAsync()
+    
+    public async Task<List<ProductDto>> getAllProductsWithImagesAsync()
     {
-        var Products = await _unitOfWork.Products.getAllAsync();
-        var productDtos = Products.
-            Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.BasePrice,
-                Description = p.Description,
-                ProductImages = p.ProductImages
-                
-            })
-            .ToList();
+        var Products = await _unitOfWork.Products.getProductsWithImagesAsync();
         
-        return productDtos;
-        
-    }
+        if(Products==null)
+            throw new NullReferenceException(nameof(Products));
 
-    public async Task<ProductDto> getProductByIdAsync(int productId)
-    {
-        var product = await _unitOfWork.Products.getByIdAsync(productId);
-        ProductDto responseProduct = new ProductDto
+        foreach (var product in Products)
         {
-            Id = product.Id,
-            Name = product.Name,
-            Description = product.Description,
-            Price = product.BasePrice,
-            ProductImages = product.ProductImages,
-            ReViews = product.ReViews
-        };
+            foreach (var image in product.ProductImages)
+            {
+                image.ImageUrl = _imageResolver.Resolve(image.ImageUrl);
+            }
+        }
+        return Products;
         
-        return responseProduct;
+    }
+    
+    public async Task<ProductDto> getProductWithImagesByIdAsync(int productId)
+    {
+        var product = await _unitOfWork.Products.getProductWithImagesByIdAsync(productId);
+        
+       if(product==null)
+           throw new NullReferenceException("Not Found Ya 7maaaaar");
+
+       foreach (var image in product.ProductImages)
+       {
+           image.ImageUrl = _imageResolver.Resolve(image.ImageUrl);
+       }
+       
+        return product;
     }
 
     public async Task<ResponseProductDto> addProductAsync(createProductDto createProductDto,List<IFormFile> images)
@@ -89,6 +93,8 @@ public class ProductService:IProductService
                 };
                 productimages.Add(newImage);
             }
+            productimages[0].isMain = true;
+            
             await _unitOfWork.Images.AddBulkAsync(productimages);
             
             await _unitOfWork.SaveChangesAsync();
@@ -134,7 +140,18 @@ public class ProductService:IProductService
             };
         
         _unitOfWork.Products.delete(product);
-        await _unitOfWork.SaveChangesAsync();
+        int isSuccess = await _unitOfWork.SaveChangesAsync();
+        
+        if (isSuccess == 0)
+        {
+            return new Response
+            {
+                IsSuccess = false,
+                Message = "Product not deleted"
+            };
+        }
+        
+        
         return new Response
         {
             IsSuccess = true,
@@ -157,8 +174,16 @@ public class ProductService:IProductService
         Product.Description = productDto.Description;
         _unitOfWork.Products.update(Product);
 
-        await _unitOfWork.SaveChangesAsync();
-
+        var isSuceess = await _unitOfWork.SaveChangesAsync();
+        if (isSuceess == 0)
+        {
+            return new Response
+            {
+                IsSuccess = false,
+                Message = "Product not updated"
+            };
+        }
+        
         return new Response
         {
             IsSuccess = true,

@@ -3,9 +3,7 @@ using noon.Application.DTOs.Review;
 using noon.Application.Repository.Contract;
 using noon.Domain.Models;
 using noon.Infrastructure.Data;
-
 namespace noon.Infrastructure.Repositories;
-
 public class ReviewRepository:IReviewRepository
 {
     private readonly ApplicationDbContext _context;
