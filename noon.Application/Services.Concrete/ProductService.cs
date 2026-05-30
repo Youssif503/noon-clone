@@ -28,7 +28,7 @@ public class ProductService:IProductService
         var Products = await _unitOfWork.Products.getProductsWithImagesAsync();
         
         if(Products==null)
-            throw new NullReferenceException(nameof(Products));
+            throw new ArgumentNullException(nameof(Products));
 
         foreach (var product in Products)
         {
@@ -79,30 +79,17 @@ public class ProductService:IProductService
 
             await _unitOfWork.Products.addAsync(newProduct);
             await _unitOfWork.SaveChangesAsync();
-            
-            List<ProductImage> productimages = new List<ProductImage>();
 
-            foreach (var image in images)
-            {
-                var imageUrl = await _imageService.SaveFileAsync(image);
-                uploadedFiles.Add(imageUrl);
-                ProductImage newImage = new ProductImage()
-                {
-                    ImageUrl = imageUrl,
-                    ProductId = newProduct.Id,
-                };
-                productimages.Add(newImage);
-            }
-            productimages[0].isMain = true;
+            var UploadedImages = await UploadImages(newProduct,images,uploadedFiles);
             
-            await _unitOfWork.Images.AddBulkAsync(productimages);
+            await _unitOfWork.Images.AddBulkAsync(UploadedImages);
             
             await _unitOfWork.SaveChangesAsync();
             await _unitOfWork.CommitTransactionAsync();
             List<string> response = new();
             foreach (var image in uploadedFiles)
             {
-                response.Add($"http://localhost:5250/images/{image}");
+                response.Add(_imageResolver.Resolve(image));
             }
             
             return new ResponseProductDto
@@ -129,6 +116,25 @@ public class ProductService:IProductService
         }
     }
 
+    private async Task<List<ProductImage>> UploadImages(Product product,
+        List<IFormFile> images,
+        List<string> uploadedFiles)
+    {
+        List<ProductImage> productimages = new List<ProductImage>();
+        foreach (var image in images)
+        {
+            var imageUrl = await _imageService.SaveFileAsync(image);
+            uploadedFiles.Add(imageUrl);
+            ProductImage newImage = new ProductImage()
+            {
+                ImageUrl = imageUrl,
+                ProductId = product.Id,
+            };
+            productimages.Add(newImage);
+        }
+        productimages[0].isMain = true;
+        return productimages;
+    }
     public async Task<Response> deleteProduct(int productId)
     {
         var product = await _unitOfWork.Products.getByIdAsync(productId);

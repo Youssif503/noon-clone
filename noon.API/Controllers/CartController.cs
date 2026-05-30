@@ -7,6 +7,7 @@ using noon.Application.Service.Contract;
 namespace noon.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CartController : ControllerBase
     {
@@ -22,7 +23,6 @@ namespace noon.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCartItems()
         {
             var userId = User.Claims.FirstOrDefault(c=>c.Type=="userId")?.Value;
@@ -35,7 +35,6 @@ namespace noon.API.Controllers
         }
 
         [HttpGet("{ItemId:int}")]
-        [Authorize]
         public async Task<IActionResult> GetCartItem(int ItemId)
         {
             var userId = User.Claims.FirstOrDefault(c=>c.Type=="userId")?.Value;
@@ -49,7 +48,6 @@ namespace noon.API.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> AddCartItem([FromBody] AddCartItem cartItem)
         {
             var userId = User.Claims.FirstOrDefault(c=>c.Type=="userId")?.Value;
@@ -68,7 +66,6 @@ namespace noon.API.Controllers
         }
         
         [HttpDelete("{productId:int}")]
-        [Authorize]
         public async Task<IActionResult> RemoveCartItem(int productId)
         {
             var userId = User.FindFirst("userId")?.Value;
