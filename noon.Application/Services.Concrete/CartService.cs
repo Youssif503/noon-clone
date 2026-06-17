@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using noon.Application.DTOs.CartItem;
 using noon.Application.Helpers;
+using noon.Application.Repository.Contract;
 using noon.Application.Service.Contract;
 using noon.Domain.Models;
 
@@ -13,11 +14,13 @@ public class CartService:ICartService
     /// 
     /// </summary>
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
     private readonly ImageResolver _imageResolver;
-    public CartService(IUnitOfWork unitOfWork,ImageResolver imageResolver)
+    public CartService(IUnitOfWork unitOfWork,ImageResolver imageResolver,ICacheService cacheService)
     {
         _unitOfWork = unitOfWork;
         _imageResolver = imageResolver;
+        _cacheService = cacheService;
     }
     public async Task<Response> AddCartItemAsync(AddCartItem cartItem)
     {
@@ -34,7 +37,6 @@ public class CartService:ICartService
                 UserId = cartItem.UserId,
             };
             await _unitOfWork.Carts.CreateCartAsync(Cart);
-            await _unitOfWork.SaveChangesAsync();
 
             var product =  await 
                 _unitOfWork.Products.getByIdAsync(cartItem.ProductId);
@@ -75,6 +77,10 @@ public class CartService:ICartService
         }
         var result = await _unitOfWork.SaveChangesAsync();
         
+        if (result > 0)
+        {
+            await _cacheService.RemoveAsync($"Cart-{cartItem.UserId}");
+        }
         return new Response()
         {
             IsSuccess = result > 0,
@@ -84,17 +90,26 @@ public class CartService:ICartService
 
     public async Task<List<CartItemDto>> GetCartItemsAsync(string userId)
     {
+        var key = $"Cart-{userId}";
+        var result = await _cacheService.GetAsync<List<CartItemDto>>(key);
+        if (result != null)
+        {
+            return result;
+        }
+        
         var CartItems = await _unitOfWork
             .Carts.GetCartItemsAsync(userId);
         foreach (var item in CartItems)
         {
             item.ImageUrl = _imageResolver.Resolve(item.ImageUrl);
         }
+        await _cacheService.SetAsync(key, CartItems);
         return CartItems;
     }
 
     public async Task<CartItemDto?> GetCartItemAsync(string userId, int CartItemId)
     {
+        
         var CartItem = await 
             _unitOfWork.Carts.GetCartItemDtoAsync(userId, CartItemId);
         
@@ -102,7 +117,6 @@ public class CartService:ICartService
             throw new ArgumentNullException(nameof(CartItem));
         
         CartItem.ImageUrl = _imageResolver.Resolve(CartItem.ImageUrl);
-
         return CartItem;
     }
 
@@ -117,6 +131,11 @@ public class CartService:ICartService
         _unitOfWork.Carts.RemoveCartItem(CartItem);
         var result = await _unitOfWork.SaveChangesAsync();
         
+        if (result > 0)
+        {
+            await _cacheService.RemoveAsync($"Cart-{userId}");
+        }
+
         return new Response()
         {
             IsSuccess = result > 0,
