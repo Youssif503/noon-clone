@@ -1,11 +1,10 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using noon.Application;
 using noon.Application.Repository.Contract;
 using StackExchange.Redis;
-
-namespace noon.Infrastructure.Repositories;
-
+namespace noon.Infrastructure;
 public class CacheService : ICacheService
 {
     private readonly ILogger<CacheService> _logger;
@@ -14,15 +13,13 @@ public class CacheService : ICacheService
 
     public CacheService(
         ILogger<CacheService> logger,
-        IConnectionMultiplexer redis,
-        IConfiguration configuration)
+        IConnectionMultiplexer redis)
     {
         _logger = logger;
         _redis = redis.GetDatabase();
-        _configuration = configuration;
     }
 
-    public async Task SetAsync<T>(string key, T value)
+    public async Task SetAsync<T>(string key, T value,TimeSpan TTL)
     {
         var serialized = JsonSerializer.Serialize(value);
 
@@ -31,7 +28,6 @@ public class CacheService : ICacheService
 
         await _redis.StringSetAsync(key, serialized, ttl);
     }
-
     public async Task<T?> GetAsync<T>(string key)
     {
         var value = await _redis.StringGetAsync(key);
@@ -44,7 +40,6 @@ public class CacheService : ICacheService
 
         return JsonSerializer.Deserialize<T>(value.ToString());
     }
-
     public async Task RemoveAsync(string key)
     {
         await _redis.KeyDeleteAsync(key);

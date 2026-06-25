@@ -13,7 +13,10 @@ public class CartService:ICartService
     /// GetCartItems <!-- For Show Your Cart -->
     /// 
     /// </summary>
+
+    private readonly TimeSpan TTL = TimeSpan.FromDays(3);
     private readonly IUnitOfWork _unitOfWork;
+    
     private readonly ICacheService _cacheService;
     private readonly ImageResolver _imageResolver;
     public CartService(IUnitOfWork unitOfWork,ImageResolver imageResolver,ICacheService cacheService)
@@ -103,7 +106,7 @@ public class CartService:ICartService
         {
             item.ImageUrl = _imageResolver.Resolve(item.ImageUrl);
         }
-        await _cacheService.SetAsync(key, CartItems);
+        await _cacheService.SetAsync(key, CartItems,TTL);
         return CartItems;
     }
 

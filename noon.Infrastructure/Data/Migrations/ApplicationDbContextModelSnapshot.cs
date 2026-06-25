@@ -47,6 +47,22 @@ namespace noon.Infrastructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "1",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            ConcurrencyStamp = "2",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -453,7 +469,7 @@ namespace noon.Infrastructure.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("noon.Domain.Models.ProductImages", b =>
+            modelBuilder.Entity("noon.Domain.Models.ProductImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -643,7 +659,7 @@ namespace noon.Infrastructure.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("noon.Domain.Models.ProductImages", b =>
+            modelBuilder.Entity("noon.Domain.Models.ProductImage", b =>
                 {
                     b.HasOne("noon.Domain.Models.Product", "Product")
                         .WithMany("ProductImages")

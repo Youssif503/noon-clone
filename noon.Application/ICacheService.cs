@@ -1,7 +1,7 @@
-namespace noon.Application.Repository.Contract;
+namespace noon.Application;
 public interface ICacheService
 {
-    Task SetAsync<T>(string key, T value);
+    Task SetAsync<T>(string key, T value,TimeSpan expiration);
     Task<T> GetAsync<T>(string key);
     Task RemoveAsync(string key);
 }
