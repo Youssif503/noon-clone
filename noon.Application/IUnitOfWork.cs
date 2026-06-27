@@ -9,7 +9,6 @@ public interface IUnitOfWork
     IImagesRepository Images { get; }
     IRefreshTokenRepository RefreshTokens { get; }
     IReviewRepository Reviews { get; }
-    IRefreshTokenRepository RefreshTokens { get; }
     Task<int> SaveChangesAsync();
     Task BeginTransactionAsync();
     Task CommitTransactionAsync();

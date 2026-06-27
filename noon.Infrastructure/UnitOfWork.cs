@@ -27,11 +27,9 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         RefreshTokens = new RefreshTokenRepository(dbContext);
         
         Carts = new CartRepository(dbContext);
-        RefreshTokens = new RefreshTokenRepository(dbContext);
     }
 
     public IProductRepository Products { get; private set; }
-    public IRefreshTokenRepository RefreshTokens { get; private set; }
     public ICartRepository Carts { get; private set; }
 
     public IGenericRepository<Category> Categories { get; private set; }
