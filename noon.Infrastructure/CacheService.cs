@@ -13,9 +13,11 @@ public class CacheService : ICacheService
 
     public CacheService(
         ILogger<CacheService> logger,
-        IConnectionMultiplexer redis)
+        IConnectionMultiplexer redis,
+        IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
         _redis = redis.GetDatabase();
     }
 
@@ -23,10 +25,7 @@ public class CacheService : ICacheService
     {
         var serialized = JsonSerializer.Serialize(value);
 
-        var ttl = TimeSpan.FromSeconds(
-            _configuration.GetValue<int>("Redis:TTL"));
-
-        await _redis.StringSetAsync(key, serialized, ttl);
+        await _redis.StringSetAsync(key, serialized, TTL);
     }
     public async Task<T?> GetAsync<T>(string key)
     {

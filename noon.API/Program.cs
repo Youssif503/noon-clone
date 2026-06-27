@@ -33,6 +33,7 @@ builder.Services.AddScoped(typeof(IProductService), typeof(ProductService));
 builder.Services.AddScoped(typeof(ICategoryService), typeof(CategoryService));
 builder.Services.AddScoped(typeof(IReviewService), typeof(ReviewService));
 builder.Services.AddScoped(typeof(IImageService), typeof(ImageService));
+builder.Services.AddScoped(typeof(ICartService), typeof(CartService));
 builder.Services.AddScoped(typeof(ICacheService), typeof(CacheService));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<ImageResolver>();
