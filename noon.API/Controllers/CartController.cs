@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace noon.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCartItems()
         {
-            var userId = User.Claims.FirstOrDefault(c=>c.Type=="userId")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if(userId == null)
                 return Unauthorized();
             
@@ -37,7 +38,7 @@ namespace noon.API.Controllers
         [HttpGet("{ItemId:int}")]
         public async Task<IActionResult> GetCartItem(int ItemId)
         {
-            var userId = User.Claims.FirstOrDefault(c=>c.Type=="userId")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if(userId == null)
                 return Unauthorized();
             
@@ -50,7 +51,7 @@ namespace noon.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCartItem([FromBody] AddCartItem cartItem)
         {
-            var userId = User.Claims.FirstOrDefault(c=>c.Type=="userId")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if(userId == null)
                 return Unauthorized();
             
@@ -68,7 +69,7 @@ namespace noon.API.Controllers
         [HttpDelete("{productId:int}")]
         public async Task<IActionResult> RemoveCartItem(int productId)
         {
-            var userId = User.FindFirst("userId")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if(userId == null)
                 return Unauthorized();

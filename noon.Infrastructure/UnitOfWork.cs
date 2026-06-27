@@ -26,6 +26,7 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
         Images = new ImageRepository(dbContext);
         
         Carts = new CartRepository(dbContext);
+        RefreshTokens = new RefreshTokenRepository(dbContext);
     }
 
     public IProductRepository Products { get; private set; }
@@ -34,6 +35,8 @@ public class UnitOfWork : IUnitOfWork, IAsyncDisposable
     public IGenericRepository<Category> Categories { get; private set; }
 
     public IReviewRepository Reviews { get; private set; }
+
+    public IRefreshTokenRepository RefreshTokens { get; private set; }
 
     public IImagesRepository Images { get; private set; }
 

@@ -8,6 +8,7 @@ public interface IUnitOfWork
     ICartRepository Carts { get; }
     IImagesRepository Images { get; }
     IReviewRepository Reviews { get; }
+    IRefreshTokenRepository RefreshTokens { get; }
     Task<int> SaveChangesAsync();
     Task BeginTransactionAsync();
     Task CommitTransactionAsync();

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using noon.Application.DTOs.Review;
 using noon.Application.Service.Contract;
@@ -38,7 +39,7 @@ namespace noon.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var userId = User.FindFirst("id")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
@@ -72,7 +73,7 @@ namespace noon.API.Controllers
         [HttpDelete("{reviewId:int}")]
         public async Task<IActionResult> Delete(int reviewId)
         {
-            var userId = User.FindFirst("id")?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
