@@ -7,6 +7,7 @@ public interface IUnitOfWork
     IGenericRepository<Category>  Categories { get; }
     ICartRepository Carts { get; }
     IImagesRepository Images { get; }
+    IRefreshTokenRepository RefreshTokens { get; }
     IReviewRepository Reviews { get; }
     IRefreshTokenRepository RefreshTokens { get; }
     Task<int> SaveChangesAsync();
